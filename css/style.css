@@ -12,7 +12,7 @@ h1,h2,h3,h4 {font-weight: bold; margin-bottom: 0.25rem}
 h1 { font-size: 4vw;}
 h2 {font-size: 3.5vw;}
 h3 {font-size: 1.2rem;}
-h4 {font-size: 1.2rem;}
+h4 {font-size: 1.2rem;} 
 
 @media only screen and (min-width: 1000px) {
     h1 {font-size: 2rem;}
