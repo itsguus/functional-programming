@@ -10,4 +10,6 @@ defaults:
     values:
       layout: "page"
 
- 
+collections:
+  versions:
+    output: false
