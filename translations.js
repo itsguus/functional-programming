@@ -5,7 +5,7 @@ var translations = [
     },
     {
         "colorDutch": "lichtblauw",
-        "colorEnglish": "lightblue"
+        "colorEnglish": "light Blue"
     },
     {
         "colorDutch": "bruin",

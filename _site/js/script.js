@@ -13,20 +13,13 @@ request.onload = function () {
 
 
 
-let requestURLColors = 'https://api.color.pizza/v1/'; //API link 
-let requestColors = new XMLHttpRequest(); //API request
-requestColors.open('GET', requestURLColors); //Get
-requestColors.responseType = 'json'; //= JSON
-requestColors.send(); //Go
-
-var colorData = [];
-requestColors.onload = function () {
-    colorData = requestColors.response;
-};
-
-
-setTimeout(function(){console.log(colorData);},1000);
-
+function getAllColorData() {
+    let requestURLColors = 'https://api.color.pizza/v1/'; //API link 
+    let requestColors = new XMLHttpRequest(); //API request
+    requestColors.open('GET', requestURLColors); //Get
+    requestColors.responseType = 'json'; //= JSON
+    requestColors.send(); //Go
+}
 
 function showAllQuestions(objArray) {
     // shows all the question names in the HTML so i don't have to console.log the JSON file and look there.
@@ -42,7 +35,6 @@ function showAllQuestions(objArray) {
 function startTheShow(objArray) {
     cleanColors(objArray);
 }
-
 
 let validColors = [];
 let invalidColors = [];
@@ -70,15 +62,24 @@ function transformInvalidColorsToHex(colors) {
     namedColors = colors.filter(isColorNamed);
     invalidColors = invalidColors.filter(color => !isColorRGB(color));
 
-    let translatedNames = namedColors.map(colorName => translateColor(colorName)),
-        transformedNamedColors = translatedNames.map(translatedColorName => transformNamedColorIntoHex(translatedColorName));
+    let translatedNames = namedColors.map(colorName => translateColor(colorName));
 
-
-    // console.log(translatedNames);
+    getData('https://api.color.pizza/v1/').then(
+        function (data) {
+            data = data.colors;
+            let transformedNamedColors = translatedNames.map(translatedColorName => transformNamedColorIntoHex(data, translatedColorName));
+        });    
 }
 
-function transformNamedColorIntoHex(colorName) {
+async function getData(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+}
 
+function transformNamedColorIntoHex(data, colorName) {
+    colorName = colorName.charAt(0).toUpperCase() + colorName.slice(1);
+    return foundColor = data.find(color => color.name == colorName).hex;
 }
 
 function translateColor(colorName) {
@@ -88,10 +89,6 @@ function translateColor(colorName) {
 
     //Doing this by the way because I couldnt find a dutch API for translating color names into HEX.
     return translation = translations.find(color => color.colorDutch == colorName).colorEnglish;
-}
-
-function findBlue(color) {
-    return color.colorDutch = 'blauw';
 }
 
 
