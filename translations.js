@@ -17,6 +17,26 @@ var translations = [
     },
     {
         "colorDutch": "legergroen",
-        "colorEnglish": "armygreen"
+        "colorEnglish": "army Green"
+    },
+    {
+        "colorDutch": "staal,",
+        "colorEnglish": "steel"
+    },
+    {
+        "colorDutch": "zwart",
+        "colorEnglish": "black"
+    },
+    {
+        "colorDutch": "rood",
+        "colorEnglish": "red"
+    },
+    {
+        "colorDutch": "geel",
+        "colorEnglish": "yellow"
+    },
+    {
+        "colorDutch": "grijs",
+        "colorEnglish": "grey"
     }
 ];

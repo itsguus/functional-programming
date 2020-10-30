@@ -1,3 +1,8 @@
+// ONDERZOEK CASE:  
+
+// Welk gedrag is per buurt het goedkoopst om Amsterdam een dag te bezoeken, tijdsgewijs.
+
+
 
 let requestURL = '/data.json'; //API link 
 let request = new XMLHttpRequest(); //API request
@@ -44,7 +49,8 @@ let namedColors = [];
 
 function cleanColors(objArray) {
     // Map the colors from the JSON file into an array with just the colors and strip them of whitespaces, dots & #'s..
-    let formattedColorData = objArray.map(dataEntry => formatData(dataEntry["oogKleur"]));
+    let formattedColorData = objArray.map(dataEntry => formatData(dataEntry["lievelingskleur"]));
+    formattedColorData  = formattedColorData.filter(item => item !== "");
     validColors = formattedColorData.filter(isColorValidHex);
     invalidColors = formattedColorData.filter(color => !isColorValidHex(color));
     transformInvalidColorsToHex(invalidColors);
@@ -53,14 +59,14 @@ function cleanColors(objArray) {
 function transformInvalidColorsToHex(colors) {
     //RGB Colors
     RGBColors = colors.filter(isColorRGB);
-    invalidColors = invalidColors.filter(color => !isColorNamed(color));
+    invalidColors = invalidColors.filter(color => !isColorRGB(color));
 
     let TransformedRGBColors = RGBColors.map(RGBCode => transformRGBIntoHex(RGBCode));
     validColors = validColors.concat(TransformedRGBColors);
 
     //Named Colors
     namedColors = colors.filter(isColorNamed);
-    invalidColors = invalidColors.filter(color => !isColorRGB(color));
+    invalidColors = invalidColors.filter(color => !isColorNamed(color));
 
     let translatedNames = namedColors.map(colorName => translateColor(colorName));
 
@@ -68,7 +74,14 @@ function transformInvalidColorsToHex(colors) {
         function (data) {
             data = data.colors;
             let transformedNamedColors = translatedNames.map(translatedColorName => transformNamedColorIntoHex(data, translatedColorName));
+            validColors = validColors.concat(transformedNamedColors);
+            validColors = validColors.map(color => formatBack(color));
+            console.log(validColors);
         });    
+}
+
+function formatBack(str) {
+    return str = "#" + str.toUpperCase();
 }
 
 async function getData(url) {
@@ -78,8 +91,9 @@ async function getData(url) {
 }
 
 function transformNamedColorIntoHex(data, colorName) {
-    colorName = colorName.charAt(0).toUpperCase() + colorName.slice(1);
-    return foundColor = data.find(color => color.name == colorName).hex;
+    colorName = colorName.charAt(0).toUpperCase() + colorName.slice(1); //named colors in the dataset are capitalized.
+    if(foundColor = data.find(color => color.name == colorName))  return foundColor = data.find(color => color.name == colorName).hex;
+    else console.log(colorName);
 }
 
 function translateColor(colorName) {
@@ -88,7 +102,8 @@ function translateColor(colorName) {
     //the dutch and english names of colors.
 
     //Doing this by the way because I couldnt find a dutch API for translating color names into HEX.
-    return translation = translations.find(color => color.colorDutch == colorName).colorEnglish;
+    if (translation = translations.find(color => color.colorDutch == colorName))  return translation = translations.find(color => color.colorDutch == colorName).colorEnglish;
+    else console.log(colorName);
 }
 
 
@@ -112,6 +127,7 @@ function formatData(entry) {
         .toLowerCase() // for easier life, will transform to uppercase after cleaning everything
         .replace(/ /g, "") // get rid of spaces
         .replace(".", ",") // . to ,
+        .replace("/", "") // . to ,
         .replace("#", ""); // no pounds
 }
 
